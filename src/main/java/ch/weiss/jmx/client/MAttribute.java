@@ -1,5 +1,6 @@
 package ch.weiss.jmx.client;
 
+import javax.management.Attribute;
 import javax.management.MBeanAttributeInfo;
 import javax.management.ObjectInstance;
 
@@ -56,6 +57,21 @@ public class MAttribute
     catch(Exception ex)
     {
       throw new JmxException("Cannot read value of attribute "+name(), ex);
+    }
+  }
+
+  public void value(String valueAsString)
+  {
+    try
+    {
+      Object value = new JmxStringConverter(valueAsString).toType(type());
+      jmxClient.mBeanServerConnection().setAttribute(
+          objectInstance.getObjectName(), 
+          new Attribute(name(), value));
+    }
+    catch(Exception ex)
+    {
+      throw new JmxException("Cannot write value of attribute "+name(), ex);
     }
   }
 }

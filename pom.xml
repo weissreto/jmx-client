@@ -39,8 +39,7 @@
             </manifestEntries>
           </archive>
         </configuration>
-      </plugin>
-      
+      </plugin>      
     </plugins>
   </build>
   <dependencies>
