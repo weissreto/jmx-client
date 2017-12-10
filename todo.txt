@@ -1,0 +1,3 @@
+* Support array in array string to object conversion
+* Support string to object bean conversion with {x:5, y:7} format
+* Tests

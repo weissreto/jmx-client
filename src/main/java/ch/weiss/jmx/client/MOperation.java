@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import javax.management.MBeanOperationInfo;
 import javax.management.ObjectInstance;
 
+import ch.weiss.check.Check;
+
 public class MOperation
 {
   private JmxClient jmxClient;
@@ -53,14 +55,14 @@ public class MOperation
         .collect(Collectors.toList());
   }
   
-  public Object invoke(Object... arguments)
+  public Object invoke(Object... parameters)
   {
     try
     {
       return jmxClient.mBeanServerConnection().invoke(
           objectInstance.getObjectName(), 
           name(), 
-          arguments, 
+          parameters, 
           vmParameterTypes());
     }
     catch (Exception ex)
@@ -69,15 +71,21 @@ public class MOperation
     }
   }
   
-  public String invoke(String... arguments)
+  public String invoke(List<String> parameters)
+  {
+    Check.parameter("parameters").withValue(parameters).isNotNull();
+    return invoke(parameters.toArray(new String[parameters.size()]));
+  }
+  
+  public String invoke(String... parameters)
   {
     String[] signature = parameterTypes();
-    if (signature.length != arguments.length)
+    if (signature.length != parameters.length)
     {
-      throw new JmxException("Wrong number of arguments given for operation "+name()+". Expected "+signature.length+" but was "+arguments.length);
+      throw new JmxException("Wrong number of arguments given for operation "+name()+". Expected "+signature.length+" but was "+parameters.length);
     }
 
-    Object[] convertedArguments = convertArguments(arguments, signature);
+    Object[] convertedArguments = convertArguments(parameters, signature);
     Object result = invoke(convertedArguments);
     return new JmxValueConverter(result).toString();
   }
@@ -89,7 +97,7 @@ public class MOperation
     {
       convertedArguments[pos] = new JmxStringConverter(arguments[pos]).toType(signature[pos]);
     }
-    return null;
+    return convertedArguments;
   }
   
   private String[] parameterTypes()

@@ -55,7 +55,7 @@ public class JmxStringConverter
     {
       return Double.parseDouble(value);
     }
-    if (StringUtils.startsWith(type, "["))
+    if (StringUtils.endsWith(type, "[]"))
     {
       return fromArray(type);
     }
@@ -64,70 +64,66 @@ public class JmxStringConverter
 
   private Object fromArray(String type)
   {
-    String cType = StringUtils.removeStart(type, "[");
+    if (StringUtils.startsWith(value, "[") && StringUtils.endsWith(value, "]"))
+    {
+      value = StringUtils.substringBetween(value, "[", "]");
+    }
+    String[] values = value.split(",");
+    String cType = StringUtils.removeEnd(type, "[]");
     
     Class<?> componentType = toComponentType(cType);
-    int length = StringUtils.countMatches(value, ",") + 1;
-    Object array = Array.newInstance(componentType, length);
+    Object array = Array.newInstance(componentType, values.length);
     
-    String values = StringUtils.removeStart(value, "[");
-    values = StringUtils.removeEnd(value, "]");
     int pos = 0;
-    for (String val : values.split(","))
+    for (String val : values)
     {
       Object item = new JmxStringConverter(val).toType(componentType.getName());
-      Array.set(array, pos, item);
+      Array.set(array, pos++, item);
     }
     return array;
   }
   
-  private static Class<?> toComponentType(String vmType)
+  private static Class<?> toComponentType(String type)
   {
-    switch(vmType.charAt(0))
+    if (Boolean.TYPE.getName().equals(type))
     {
-      case 'Z':
-        return Boolean.TYPE;
-      case 'B':
-        return Byte.TYPE;
-      case 'C':
-        return Character.TYPE;
-      case 'S':
-        return Short.TYPE;        
-      case 'I':
-        return Integer.TYPE;
-      case 'J':        
-        return Long.TYPE;
-      case 'F':
-        return Float.TYPE;
-      case 'D':
-        return Double.TYPE;
-      case 'L':
-        return toClass(vmType);
-      case '[':
-        return toArrayClass(vmType);
-      default:
-        throw new IllegalStateException("Unknown type "+vmType);
+      return Boolean.TYPE;
     }
-  }
-  
-  private static Class<?> toClass(String vmType)
-  {
+    if (Character.TYPE.getName().equals(type))
+    {
+      return Character.TYPE;
+    }
+    if (Byte.TYPE.getName().equals(type))
+    {
+      return Byte.TYPE;
+    }
+    if (Short.TYPE.getName().equals(type))
+    {
+      return Short.TYPE;
+    }
+    if (Integer.TYPE.getName().equals(type))
+    {
+      return Integer.TYPE;
+    }
+    if (Long.TYPE.getName().equals(type))
+    {
+      return Long.TYPE;
+    }
+    if (Float.TYPE.getName().equals(type))
+    {
+      return Float.TYPE;
+    }
+    if (Double.TYPE.getName().equals(type))
+    {
+      return Double.TYPE;
+    }
     try
     {
-      String vmRawType = StringUtils.removeStart(vmType, "L");
-      vmRawType = StringUtils.substringBefore(vmRawType, ";");
-      return Class.forName(vmRawType);
+      return Class.forName(type);
     }
     catch (ClassNotFoundException ex)
     {
-      throw new JmxException("Could not found class "+vmType, ex); 
+      throw new JmxException("Could not found class "+type, ex); 
     }
   }
-
-  private static Class<?> toArrayClass(String vmType)
-  {
-    String vmCType = StringUtils.removeStart(vmType, "[");
-    Class<?> componentType = toComponentType(vmCType);
-    return Array.newInstance(componentType, 0).getClass(); 
-  }  
 }
