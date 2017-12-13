@@ -1,5 +1,6 @@
 package ch.weiss.jmx.client;
 
+import java.lang.management.ManagementFactory;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,23 @@ public class Jvm
   
   public JmxClient connect() 
   {
+    if (isLocalJvm())
+    {
+      return JmxClient.connectToLocal();
+    }
+    return attachAndConnect();
+  }
+
+  private boolean isLocalJvm()
+  {
+    String name = ManagementFactory.getRuntimeMXBean().getName();
+    System.out.println(name);
+    String id = StringUtils.substringBefore(name, "@");
+    return id().equals(id);
+  }
+
+  private JmxClient attachAndConnect()
+  {
     try
     {
       VirtualMachine vm = VirtualMachine.attach(vmDescriptor);
@@ -53,18 +71,33 @@ public class Jvm
       .collect(Collectors.toList());
   }
 
-  public static Jvm runningJvm(String idOrPartOfTheDisplayName)
+  public static Jvm runningJvm(String idOrPartOfTheMainClassName)
   {
-    Check.parameter("idOrDisplayName").withValue(idOrPartOfTheDisplayName).isNotBlank();
+    Check.parameter("idOrDisplayName").withValue(idOrPartOfTheMainClassName).isNotBlank();
     return getAvailableRunningJvms()
         .stream()
-        .filter(jvm -> idOrPartOfTheDisplayName.equals(jvm.id()))
+        .filter(jvm -> idOrPartOfTheMainClassName.equals(jvm.id()))
         .findAny()
         .orElseGet(
             () -> getAvailableRunningJvms()
             .stream()
-            .filter(jvm -> jvm.displayName().contains(idOrPartOfTheDisplayName))
+            .filter(jvm -> jvm.mainClassName().contains(idOrPartOfTheMainClassName))
             .findAny()
             .orElse(null));
+  }
+
+  private String mainClassName()
+  {    
+    StringBuilder mainClassName = new StringBuilder();
+    for (int pos = 0; pos < displayName().length(); pos++)
+    {
+      char ch = displayName().charAt(pos);
+      if (Character.isWhitespace(ch))
+      {
+        break;
+      }
+      mainClassName.append(ch);
+    }
+    return mainClassName.toString();
   }
 }

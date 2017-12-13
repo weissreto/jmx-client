@@ -1,9 +1,13 @@
 package ch.weiss.jmx.client;
 
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.management.MBeanServer;
 import javax.management.MBeanServerConnection;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
@@ -12,6 +16,11 @@ import javax.management.remote.JMXServiceURL;
 import ch.weiss.check.Check;
 
 
+/**
+ * @author Reto Weiss
+ * @since 0.1
+ *
+ */
 public class JmxClient implements AutoCloseable
 {
   private final JMXConnector connector;
@@ -23,6 +32,12 @@ public class JmxClient implements AutoCloseable
     this.mBeanServerConnection = connector.getMBeanServerConnection();
   }
   
+  private JmxClient(MBeanServer mBeanServer)
+  {
+    this.connector = null;
+    this.mBeanServerConnection = mBeanServer;
+  }
+
   public List<MBean> allBeans()
   {
     return beansThatMatch(MBeanFilter.EMPTY);
@@ -65,16 +80,46 @@ public class JmxClient implements AutoCloseable
     Check.parameter("hostName").withValue(hostName).isNotBlank();
     Check.parameter("port").withValue(port).isInRange(0, 65535);
 
-    return connectTo("service:jmx:rmi:///jndi/rmi://"+hostName+":"+port+"/jmxrmi");
+    String serviceUrl = toServiceUrl(hostName, port);
+    return connectTo(serviceUrl);
   }
   
-  @SuppressWarnings("resource")
+  public static JmxClient connectTo(String hostName, int port, String userName, String password)
+  {
+    Check.parameter("hostName").withValue(hostName).isNotBlank();
+    Check.parameter("port").withValue(port).isInRange(0, 65535);
+    Check.parameter("userName").withValue(userName).isNotNull();
+    Check.parameter("password").withValue(password).isNotNull();
+    
+    Map<String,Object> environment = new HashMap<>();
+    environment.put(JMXConnector.CREDENTIALS, new String[] {userName, password});
+    
+    String serviceUrl = toServiceUrl(hostName, port); 
+    return connectTo(serviceUrl, environment);
+  }
+
+  private static String toServiceUrl(String hostName, int port)
+  {
+    return "service:jmx:rmi:///jndi/rmi://"+hostName+":"+port+"/jmxrmi";
+  }
+
+  public static JmxClient connectToLocal()
+  {
+    return new JmxClient(ManagementFactory.getPlatformMBeanServer());
+  }
+
   public static JmxClient connectTo(String jmxServiceUrl)
+  {
+    return connectTo(jmxServiceUrl, null);
+  }
+
+  @SuppressWarnings("resource")
+  public static JmxClient connectTo(String jmxServiceUrl, Map<String,?> environment)
   {
     Check.parameter("jmxServiceUrl").withValue(jmxServiceUrl).isNotBlank();
     try
     {
-      JMXConnector connector = JMXConnectorFactory.connect(new JMXServiceURL(jmxServiceUrl));
+      JMXConnector connector = JMXConnectorFactory.connect(new JMXServiceURL(jmxServiceUrl), environment);
       return new JmxClient(connector);
     }
     catch(IOException ex)
@@ -91,6 +136,9 @@ public class JmxClient implements AutoCloseable
   @Override
   public void close() throws IOException
   {
-    connector.close();
+    if (connector != null)
+    {
+      connector.close();
+    }
   }
 }
