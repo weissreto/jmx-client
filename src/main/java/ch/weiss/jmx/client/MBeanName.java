@@ -1,5 +1,6 @@
 package ch.weiss.jmx.client;
 
+import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,6 +18,16 @@ import ch.weiss.check.Check;
 public class MBeanName implements Comparable<MBeanName>
 {
   public static final MBeanName EMPTY = new MBeanName();
+  public static final MBeanName CLASS_LOADING = MBeanName.createFor(ManagementFactory.CLASS_LOADING_MXBEAN_NAME);
+  public static final MBeanName COMPILATION = MBeanName.createFor(ManagementFactory.COMPILATION_MXBEAN_NAME);
+  public static final MBeanName GARBAGE_COLLECTION = MBeanName.createFor(ManagementFactory.GARBAGE_COLLECTOR_MXBEAN_DOMAIN_TYPE);
+  public static final MBeanName MEMORY_MANAGER = MBeanName.createFor(ManagementFactory.MEMORY_MANAGER_MXBEAN_DOMAIN_TYPE);
+  public static final MBeanName MEMORY = MBeanName.createFor(ManagementFactory.MEMORY_MXBEAN_NAME);
+  public static final MBeanName MEMORY_POOL = MBeanName.createFor(ManagementFactory.MEMORY_POOL_MXBEAN_DOMAIN_TYPE);
+  public static final MBeanName OPERATING_SYSTEM = MBeanName.createFor(ManagementFactory.OPERATING_SYSTEM_MXBEAN_NAME);
+  public static final MBeanName RUNTIME = MBeanName.createFor(ManagementFactory.RUNTIME_MXBEAN_NAME);
+  public static final MBeanName THREAD = MBeanName.createFor(ManagementFactory.THREAD_MXBEAN_NAME);
+  
   private final String domain;
   private final List<Property> properties;
   
