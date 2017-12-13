@@ -62,12 +62,17 @@ public class MAttribute
 
   public void value(String valueAsString)
   {
+    Object value = new JmxStringConverter(valueAsString).toType(type());
+    value(value);
+  }
+
+  public void value(Object value)
+  {
     try
     {
-      Object value = new JmxStringConverter(valueAsString).toType(type());
       jmxClient.mBeanServerConnection().setAttribute(
-          objectInstance.getObjectName(), 
-          new Attribute(name(), value));
+        objectInstance.getObjectName(), 
+        new Attribute(name(), value));
     }
     catch(Exception ex)
     {
