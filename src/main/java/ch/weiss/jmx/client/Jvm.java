@@ -43,7 +43,6 @@ public class Jvm
   private boolean isLocalJvm()
   {
     String name = ManagementFactory.getRuntimeMXBean().getName();
-    System.out.println(name);
     String id = StringUtils.substringBefore(name, "@");
     return id().equals(id);
   }
