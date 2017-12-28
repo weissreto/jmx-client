@@ -47,4 +47,10 @@ public class MBeanFilter
       throw new JmxException("Given bean name "+nameWithWildcards+" is not valid", ex);
     }
   }
+  
+  @Override
+  public String toString()
+  {
+    return nameWithWildcards.toString();
+  }
 }
