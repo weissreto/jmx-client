@@ -3,6 +3,8 @@ package ch.weiss.jmx.client;
 import javax.management.Attribute;
 import javax.management.MBeanAttributeInfo;
 import javax.management.ObjectInstance;
+import javax.management.openmbean.OpenMBeanAttributeInfo;
+import javax.management.openmbean.OpenType;
 
 public class MAttribute
 {
@@ -30,6 +32,15 @@ public class MAttribute
   public String type()
   {
     return new VmTypeConverter(attribute.getType()).toDisplayName();
+  }
+  
+  public OpenType<?> openType()
+  {
+    if (attribute instanceof OpenMBeanAttributeInfo)
+    {
+      return ((OpenMBeanAttributeInfo)attribute).getOpenType();
+    }
+    return null;
   }
   
   public boolean isReadable()
