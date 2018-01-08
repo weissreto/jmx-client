@@ -1,4 +1,4 @@
-package ch.weiss.jmx.client;
+package ch.rweiss.jmx.client;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import javax.management.MBeanOperationInfo;
 import javax.management.ObjectInstance;
 
-import ch.weiss.check.Check;
+import ch.rweiss.check.Check;
 
 public class MOperation
 {

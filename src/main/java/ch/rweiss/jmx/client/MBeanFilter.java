@@ -1,9 +1,9 @@
-package ch.weiss.jmx.client;
+package ch.rweiss.jmx.client;
 
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
-import ch.weiss.check.Check;
+import ch.rweiss.check.Check;
 
 public class MBeanFilter
 {

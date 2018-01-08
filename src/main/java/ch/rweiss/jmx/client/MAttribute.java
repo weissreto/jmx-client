@@ -1,4 +1,4 @@
-package ch.weiss.jmx.client;
+package ch.rweiss.jmx.client;
 
 import javax.management.Attribute;
 import javax.management.MBeanAttributeInfo;

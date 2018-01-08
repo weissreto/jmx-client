@@ -1,4 +1,4 @@
-package ch.weiss.jmx.client;
+package ch.rweiss.jmx.client;
 
 import org.apache.commons.lang3.StringUtils;
 

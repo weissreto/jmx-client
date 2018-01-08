@@ -1,4 +1,4 @@
-package ch.weiss.jmx.client;
+package ch.rweiss.jmx.client;
 
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import ch.weiss.check.Check;
+import ch.rweiss.check.Check;
 
 public class MBeanName implements Comparable<MBeanName>
 {

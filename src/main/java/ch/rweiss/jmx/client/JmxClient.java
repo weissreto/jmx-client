@@ -1,4 +1,4 @@
-package ch.weiss.jmx.client;
+package ch.rweiss.jmx.client;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -13,7 +13,7 @@ import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 
-import ch.weiss.check.Check;
+import ch.rweiss.check.Check;
 
 
 /**

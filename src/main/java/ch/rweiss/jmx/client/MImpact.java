@@ -1,8 +1,8 @@
-package ch.weiss.jmx.client;
+package ch.rweiss.jmx.client;
 
 import javax.management.MBeanOperationInfo;
 
-import ch.weiss.check.Check;
+import ch.rweiss.check.Check;
 
 public enum MImpact
 {

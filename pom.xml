@@ -1,8 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>ch.weiss</groupId>
+  <groupId>ch.rweiss</groupId>
   <artifactId>jmx-client</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.0.3-SNAPSHOT</version>
   <build>
     <plugins>
       <plugin>
@@ -31,7 +31,7 @@
         <configuration>
           <archive>
             <manifestEntries>
-              <Automatic-Module-Name>ch.weiss.jmx.client</Automatic-Module-Name>
+              <Automatic-Module-Name>ch.rweiss.jmx.client</Automatic-Module-Name>
               <Built-By>Reto Weiss</Built-By>
               <Implementation-Title>${project.artifactId}</Implementation-Title>
               <Implementation-Vendor>Reto Weiss</Implementation-Vendor>
@@ -44,9 +44,9 @@
   </build>
   <dependencies>
     <dependency>
-      <groupId>ch.weiss</groupId>
+      <groupId>ch.rweiss</groupId>
       <artifactId>check</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>0.0.2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>

@@ -1,4 +1,4 @@
-package ch.weiss.jmx.client;
+package ch.rweiss.jmx.client;
 
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
@@ -6,7 +6,7 @@ import javax.management.ObjectName;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
-import ch.weiss.jmx.client.MBeanName;
+import ch.rweiss.jmx.client.MBeanName;
 
 public class TestMBeanName
 {

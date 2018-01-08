@@ -1,4 +1,4 @@
-package ch.weiss.jmx.client;
+package ch.rweiss.jmx.client;
 
 import java.lang.management.ManagementFactory;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.sun.tools.attach.VirtualMachine;
 import com.sun.tools.attach.VirtualMachineDescriptor;
 
-import ch.weiss.check.Check;
+import ch.rweiss.check.Check;
 
 @SuppressWarnings("restriction")
 public class Jvm
