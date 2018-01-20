@@ -128,6 +128,16 @@ public class MBeanName implements Comparable<MBeanName>
     properties.forEach(property -> keyParts.add(property.key));
     return keyParts;
   }
+  
+  public String valuePartOf(String key)
+  {
+    int pos = keyParts().indexOf(key);
+    if (pos < 0)
+    {
+      return null;
+    }
+    return valueParts().get(pos);
+  }
 
   public MBeanName suffix(int parts)
   {
