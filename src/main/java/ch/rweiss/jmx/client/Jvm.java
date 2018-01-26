@@ -9,8 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import com.sun.tools.attach.VirtualMachine;
 import com.sun.tools.attach.VirtualMachineDescriptor;
 
-import ch.rweiss.check.Check;
-
 @SuppressWarnings("restriction")
 public class Jvm
 {
@@ -72,17 +70,24 @@ public class Jvm
 
   public static Jvm runningJvm(String idOrPartOfTheMainClassName)
   {
-    Check.parameter("idOrDisplayName").withValue(idOrPartOfTheMainClassName).isNotBlank();
+    if (StringUtils.isBlank(idOrPartOfTheMainClassName))
+    {
+      return getAvailableRunningJvms()
+          .stream()
+          .filter(jvm -> !jvm.isLocalJvm())
+          .findAny()
+          .orElse(null);
+    }
     return getAvailableRunningJvms()
-        .stream()
-        .filter(jvm -> idOrPartOfTheMainClassName.equals(jvm.id()))
-        .findAny()
-        .orElseGet(
-            () -> getAvailableRunningJvms()
-            .stream()
-            .filter(jvm -> jvm.mainClassName().contains(idOrPartOfTheMainClassName))
-            .findAny()
-            .orElse(null));
+      .stream()
+      .filter(jvm -> idOrPartOfTheMainClassName.equals(jvm.id()))
+      .findAny()
+      .orElseGet(
+          () -> getAvailableRunningJvms()
+          .stream()
+          .filter(jvm -> jvm.mainClassName().contains(idOrPartOfTheMainClassName))
+          .findAny()
+          .orElse(null));
   }
 
   private String mainClassName()
