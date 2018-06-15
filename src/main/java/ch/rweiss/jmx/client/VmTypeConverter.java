@@ -15,8 +15,7 @@ public class VmTypeConverter
   {
     if (StringUtils.startsWith(vmType, "["))
     {
-      String type = toDisplayName(StringUtils.removeStart(vmType, "["));
-      return type+"[]";
+      return toDisplayName(vmType);
     }
     return vmType;
   }
@@ -44,9 +43,9 @@ public class VmTypeConverter
       case 'L':
         return toClassDisplayName(type);
       case '[':
-        return toDisplayName(type);
+        return toArrayDisplayName(type);
       default:
-        throw new IllegalStateException();
+        throw new IllegalStateException("Unknown type "+type);
     }
   }
   
@@ -55,5 +54,12 @@ public class VmTypeConverter
     String vmRawType = StringUtils.removeStart(vmType, "L");
     vmRawType = StringUtils.substringBefore(vmRawType, ";");
     return vmRawType;
+  }
+  
+  private static String toArrayDisplayName(String vmType)
+  {
+    String elementVmType = StringUtils.removeStart(vmType, "[");
+    String elementType = toDisplayName(elementVmType);
+    return elementType+"[]";
   }
 }
