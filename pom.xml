@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>ch.rweiss</groupId>
   <artifactId>jmx-client</artifactId>
-  <version>0.1.0</version>
+  <version>0.2.0-SNAPSHOT</version>
   
   <properties>
     <junit.engine.version>5.2.0</junit.engine.version>
@@ -81,7 +81,7 @@
     <dependency>
       <groupId>ch.rweiss</groupId>
       <artifactId>check</artifactId>
-      <version>0.1.0</version>
+      <version>0.2.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
