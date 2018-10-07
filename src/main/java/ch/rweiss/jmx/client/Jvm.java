@@ -2,6 +2,7 @@ package ch.rweiss.jmx.client;
 
 import java.lang.management.ManagementFactory;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -72,22 +73,45 @@ public class Jvm
   {
     if (StringUtils.isBlank(idOrPartOfTheMainClassName))
     {
-      return getAvailableRunningJvms()
-          .stream()
-          .filter(jvm -> !jvm.isLocalJvm())
-          .findAny()
-          .orElse(null);
+      return getAnyNonLocalJvm()
+          .orElseGet(()->getLocalJvm());
     }
+    return getJvmById(idOrPartOfTheMainClassName).
+        orElseGet(() -> getJvmByPartOfTheMainClassName(idOrPartOfTheMainClassName));
+  }
+
+  private static Jvm getJvmByPartOfTheMainClassName(String partOfTheMainClassName)
+  {
     return getAvailableRunningJvms()
-      .stream()
-      .filter(jvm -> idOrPartOfTheMainClassName.equals(jvm.id()))
-      .findAny()
-      .orElseGet(
-          () -> getAvailableRunningJvms()
-          .stream()
-          .filter(jvm -> jvm.mainClassName().contains(idOrPartOfTheMainClassName))
-          .findAny()
-          .orElse(null));
+        .stream()
+        .filter(jvm -> jvm.mainClassName().contains(partOfTheMainClassName))
+        .findAny()
+        .orElse(null);
+  }
+
+  private static Optional<Jvm> getAnyNonLocalJvm()
+  {
+    return getAvailableRunningJvms()
+        .stream()
+        .filter(jvm -> !jvm.isLocalJvm())
+        .findAny();
+  }
+  
+  private static Jvm getLocalJvm()
+  {
+    return getAvailableRunningJvms()
+        .stream()
+        .filter(jvm -> jvm.isLocalJvm())
+        .findAny()
+        .orElse(null);
+  }
+  
+  private static Optional<Jvm> getJvmById(String id)
+  {
+    return getAvailableRunningJvms()
+        .stream()
+        .filter(jvm -> id.equals(jvm.id()))
+        .findAny();
   }
 
   private String mainClassName()
