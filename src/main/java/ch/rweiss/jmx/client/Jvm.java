@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import com.sun.tools.attach.VirtualMachine;
 import com.sun.tools.attach.VirtualMachineDescriptor;
 
-@SuppressWarnings("restriction")
 public class Jvm
 {
   private final VirtualMachineDescriptor vmDescriptor;

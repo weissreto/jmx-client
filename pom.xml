@@ -14,15 +14,38 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.7.0</version>
+        <version>3.8.0</version>
+        <executions>
+          <execution>
+            <id>module-compile</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <!-- compile module-info.java to be compatible with java 11 -->
+              <release>11</release>
+              <includes>
+                <include>module-info.java</include>
+              </includes>
+            </configuration>
+          </execution>
+          <execution>
+            <id>default-compile</id>
+            <!-- Compile all other classes to be compatible with java 8 -->
+            <configuration>
+              <excludes>
+                <exclude>module-info.java</exclude>
+              </excludes>
+            </configuration>
+          </execution>
+        </executions>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <release>8</release>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.21.0</version>
+        <version>2.22.1</version>
         <dependencies>
           <dependency>
             <groupId>org.junit.platform</groupId>
@@ -37,7 +60,6 @@
         <configuration>
           <archive>
             <manifestEntries>
-              <Automatic-Module-Name>ch.rweiss.jmx.client</Automatic-Module-Name>
               <Built-By>Reto Weiss</Built-By>
               <Implementation-Title>${project.artifactId}</Implementation-Title>
               <Implementation-Vendor>Reto Weiss</Implementation-Vendor>
@@ -105,13 +127,20 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>3.7</version>
-    </dependency>  
-    <dependency>
-      <groupId>com.sun</groupId>
-      <artifactId>tools</artifactId>
-      <version>1.8.0</version>
-      <scope>system</scope>
-      <systemPath>${java.home}/../lib/tools.jar</systemPath>
-    </dependency>    
+    </dependency>
   </dependencies>
+  <profiles>
+    <profile>
+      <id>maven-only</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.sun</groupId>
+          <artifactId>tools</artifactId>
+          <version>1.8.0</version>
+          <scope>system</scope>
+          <systemPath>${project.basedir}/lib/tools.jar</systemPath>
+        </dependency> 
+      </dependencies> 
+    </profile>
+  </profiles>
 </project>
