@@ -1,4 +1,4 @@
-# jmx-cli [![Build Status](https://travis-ci.org/weissreto/jmx-client.svg?branch=master)](https://travis-ci.org/weissreto/jmx-client)
+# jmx-client [![Build Status](https://travis-ci.org/weissreto/jmx-client.svg?branch=master)](https://travis-ci.org/weissreto/jmx-client)
 
 This library provides classes to easily:
 * list all JVMs that are running on the local machine
