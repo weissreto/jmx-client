@@ -134,11 +134,18 @@ public class JmxClient implements AutoCloseable
   }
 
   @Override
-  public void close() throws IOException
+  public void close() throws JmxException
   {
     if (connector != null)
     {
-      connector.close();
+      try
+      {
+        connector.close();
+      }
+      catch(IOException ex)
+      {
+        throw new JmxException("Cannot close jmx client", ex);
+      }
     }
   }
 }
