@@ -73,7 +73,7 @@ public class Jvm
     if (StringUtils.isBlank(idOrPartOfTheMainClassName))
     {
       return getAnyNonLocalJvm()
-          .orElseGet(()->getLocalJvm());
+          .orElseGet(()->localJvm());
     }
     return getJvmById(idOrPartOfTheMainClassName).
         orElseGet(() -> getJvmByPartOfTheMainClassName(idOrPartOfTheMainClassName));
@@ -96,7 +96,7 @@ public class Jvm
         .findAny();
   }
   
-  private static Jvm getLocalJvm()
+  public static Jvm localJvm()
   {
     return getAvailableRunningJvms()
         .stream()
